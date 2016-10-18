@@ -1,0 +1,23 @@
+.chatnavbar {
+  background-color: #EEEEEE;
+  border:none;
+}
+.chatnavbarbottom {
+  margin-bottom:5px;
+}
+.chatclient {
+  padding-top: 0;
+  padding-bottom: 0px;
+}
+.chatfooter {
+  width:90%;
+  white-space: nowrap;
+}
+.form-group input[type=text] {
+  width:100%;
+}
+.messages {
+  width: 100%;
+  height: 400px;
+  overflow-y: scroll;
+}
