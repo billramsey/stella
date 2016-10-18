@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="chat.css">
   </head>
   <body ng-controller="AppController">
-  {{message}}
-
-
   <div class="container">
     <div class="jumbotron chatclient">
       <nav class="navbar navbar-default chatnavbar">
@@ -23,10 +20,11 @@
       </div>
 
       <ul class="nav navbar-header navbar-right">
-      <li><a href="#">Bill</li>
+      <li><a href="#">Bill</a></li>
       </ul>
       </nav>
       <div class="messages">
+      {{chats}}
 The standard Lorem Ipsum passage, used since the 1500s
 
 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
@@ -46,9 +44,9 @@ Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC
       <nav class="navbar navbar-default chatnavbar chatnavbarbottom">
         <form class="navbar-form">
         <div class="form-group chatfooter">
-          <input type="text" class="form-control" placeholder="Type Here...">
+          <input type="text" class="form-control" ng-model="message" placeholder="Type Here...">
         </div>
-        <button type="submit" class="btn btn-success">Post</button>
+        <button type="submit" class="btn btn-success" ng-click="postChat()">Post</button>
         </form>
       </nav>
     </div>
