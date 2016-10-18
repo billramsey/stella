@@ -1,0 +1,26 @@
+{
+  "name": "stella",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/billramsey/stella.git"
+  },
+  "author": "Bill Ramsey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/billramsey/stella/issues"
+  },
+  "homepage": "https://github.com/billramsey/stella#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
