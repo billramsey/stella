@@ -13,6 +13,7 @@ db.once('open', function() {
 var chatSchema = new mongoose.Schema({
   user: String,
   text: String,
+  session: String,
   createdOn: { type: Date, default: Date.now}
 });
 

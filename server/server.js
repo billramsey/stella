@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + './../client/index.html'));
 });
 
-
+require('./session.js')(app, express);
 require('./chat.js')(app, express);
 
 var port = 3000;
