@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="chat.css">
   </head>
   <body ng-controller="AppController">
-  <div class="modal show" ng-show="getUser().username === undefined">
+  <div class="modal show" ng-show="!loggedIn()">
     <div class="modal-dialog" role="document">
       <div class="modal-header">
         <h3>Pick a user name</h3>
@@ -21,11 +21,11 @@
         <input type="text" class="form-control" ng-model="requesteduser">
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" ng-click="setUser()">Go</button>
+        <button type="submit" class="btn btn-success" ng-click="logIn(requesteduser)">Go</button>
       </div>
     </div>
   </div>
-  <div class="container" ng-show="getUser().username !== undefined">
+  <div class="container" ng-show="loggedIn()">
     <div class="jumbotron chatclient">
       <nav class="navbar navbar-default chatnavbar">
       <div class="navbar-header">
@@ -33,9 +33,9 @@
       </div>
 
       <ul class="nav navbar-nav navbar-right">
-      <li class="navbar-text">{{getUser().username}}</li>
+      <li class="navbar-text">{{currentUser().username}}</li>
       <li class="navbar-text">
-        <img src="https://api.adorable.io/avatars/10/{{getUser().session}}">
+        <img src="https://api.adorable.io/avatars/10/{{currentUser().session}}">
       </li>
       <li ng-click="logOut()"><a href="#" class="navbar-link">logout</a></li>
       </ul>
@@ -43,7 +43,7 @@
       <div class="messages" id="messages">
         <div ng-repeat="chat in chats">
           <div class="row">
-            <div ng-if="chat.session === getUser().session">
+            <div ng-if="chat.session === currentUser().session">
               <div class="col-md-1">
                 <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
               </div>
@@ -56,7 +56,7 @@
                 </div>
               </div>
             </div>
-            <div ng-if="chat.session !== getUser().session">
+            <div ng-if="chat.session !== currentUser().session">
               <div class="col-md-1 col-md-push-9">
                 <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
               </div>
@@ -83,6 +83,11 @@
     </div>
   </div>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script><script src = "app/app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+
+  <script src = "app/app.js"></script>
+  <script src = "app/user-services.js"></script>
+  <script src = "app/data-services.js"></script>
+  
   </body>
 </html>

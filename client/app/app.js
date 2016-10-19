@@ -1,7 +1,9 @@
 //app.js
-angular.module('app', ['ngStorage'])
+angular.module('app', ['ngStorage', 'app.users', 'app.data'])
 .config(function($httpProvider) {
-  $httpProvider.interceptors.push(function($q, $location, $sessionStorage) {
+  //This allows us to notice when a user was logged out by the server.
+  $httpProvider.interceptors.push(function($q, $injector) {
+
     return {
       response: function(response) {
         // do something on success
@@ -9,8 +11,9 @@ angular.module('app', ['ngStorage'])
       },
       responseError: function(response) {
         if (response.status === 401) {
-          delete $sessionStorage.userName;
-          delete $sessionStorage.sessionId;
+          //Get around circular dependencies.
+          var User = $injector.get('User');
+          User.clearSession();
         }
         return $q.reject(response);
       }
@@ -18,18 +21,9 @@ angular.module('app', ['ngStorage'])
   });
 })
 .controller('AppController', function($scope, $timeout, Data, User) {
-  var getChats = function() {
-    Data.get()
-    .then(function(chats) {
-      $scope.chats = chats;
-      //Manage scroll to the bottom of the chat window on load.
-      $timeout(function() {
-        var messages = document.getElementById('messages');
-        messages.scrollTop = messages.scrollHeight;
-      }, 0, false);
-    });
-  };
-  getChats();
+  $scope.chats = [];
+  var timer;
+
   $scope.postChat = function(message) {
     Data.post($scope.message)
     .then(function(result) {
@@ -42,101 +36,44 @@ angular.module('app', ['ngStorage'])
       getChats();
     });
   };
-  $scope.getUser = User.getUser;
-  $scope.setUser = function() {
-    User.setUser($scope.requesteduser)
-    .then(getChats);
+  $scope.loggedIn = User.loggedIn;
+  $scope.logIn = function(requesteduser) {
+    User.logIn(requesteduser)
+    .then(initializeChat);
+    //todo handle error
   };
   $scope.logOut = function() {
-    User.logOut();
-  };
-})
-.service('Data', function($http) {
-  var lastGoodDataDate = null;
-  var get = function() {
-    return $http({
-      method: 'GET',
-      url: '/api/chats/' + lastGoodDataDate
-    })
-    .then(function(chats) {
-      console.log('got chats from server', chats.data);
-      return chats.data;
-    });
-  };
-  var post = function(message) {
-    return $http({
-      method: 'POST',
-      url: '/api/post',
-      data: {user: 'bill', text: message}
-    })
-    .then(function(chats) {
-      console.log('posted', chats.data);
-      return chats.data;
-    });
-  };
-  return {
-    get: get,
-    post: post
-  };
-})
-.service('User', function($http, $sessionStorage) {
-  var serverLogin = function(userName) {
-    console.log('logging in ', userName);
-    return $http({
-      method: 'POST',
-      url: '/api/login',
-      data: {username: userName, password: 'password'}
-    })
-    .then(function(session) {
-      console.log('sessiondata', session.data);
-      return session.data;
-    }).catch(function(err) {
-      console.log('error logging in', err);
-    });
-  };
-  var serverLogout = function() {
-    return $http({
-      method: 'POST',
-      url: '/api/logout',
-    });
-  };
-  var deleteSession = function() {
-    delete $sessionStorage.userName;
-    delete $sessionStorage.sessionId;
-  };
-  var logOut = function() {
-    serverLogout()
+    User.logOut()
     .then(function() {
-      console.log('loggin out');
-      deleteSession();
+      console.log('cancelling timer', timer);
+      console.log($timeout.cancel(timer));
+    });
+    //todo handle error
+  };
+  $scope.currentUser = User.getUser;
+
+  var getChats = function() {
+    Data.get()
+    .then(function(chats) {
+      chats.forEach(function(chat) {
+        $scope.chats.push(chat);
+      });
+      //Manage scroll to the bottom of the chat window on load.
+      $timeout(function() {
+        var messages = document.getElementById('messages');
+        messages.scrollTop = messages.scrollHeight;
+      }, 0, false);
     });
   };
 
-  var setUser = function(userName) {
-    return serverLogin(userName)
-    .then(function(session) {
-      if (session && session.id) {
-        //store it in the session
-        $sessionStorage.userName = userName;
-        $sessionStorage.sessionId = session.id;
-      } else {
-        console.log('No session returned');
-      }
-    });
+  var poll = function() {
+    if (User.loggedIn()) {
+      getChats();
+      timer = $timeout(poll, 5000);
+    }
   };
-  var getUser = function() {
-    return {
-      username: $sessionStorage.userName,
-      session: $sessionStorage.sessionId
-    };
+  var initializeChat = function() {
+    poll();
   };
-  return {
-    setUser: setUser,
-    getUser: getUser,
-    logOut: logOut,
-    deleteSession: deleteSession
-  };
+  initializeChat();
 });
-
-//http://api.adorable.io/avatar/200/bob
-

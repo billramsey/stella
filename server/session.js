@@ -2,9 +2,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 
-//We are using passport and session to generate a unique id for generating
+//I am using passport and session to generate a unique id for generating
 //a user's avatar.  That way you can have two 'bill's in a chat room and tell
-//them apart.  You also can't set your avatar so you can't impersonate someone 
+//them apart.  You can't set your avatar so you can't impersonate someone 
 module.exports = (app, express) => {
   app.use(session({
     secret: 'stella',
@@ -28,7 +28,8 @@ module.exports = (app, express) => {
     }
   );
   app.post('/api/logout', function(req, res, next) {
-    req.logout();
+    //logout was unreliable in destroying session.
+    req.session.destroy();
     res.json({});
   });
 };
