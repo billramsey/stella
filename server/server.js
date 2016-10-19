@@ -23,7 +23,7 @@ var authenticated = function(req, res, next) {
 app.get('/api/chats/:lastDate?', authenticated, messages.getPostsRoute);
 app.post('/api/post', authenticated, messages.addPostRoute);
 
-var port = 3000;
+var port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log('application started on port', port);
 });

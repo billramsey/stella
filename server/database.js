@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/stella');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/stella');
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
