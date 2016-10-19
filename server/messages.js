@@ -35,13 +35,13 @@ var addPost = function(user, text, sessionId) {
   return new Promise((resolve, reject) => {
 
     if (!isValid(user)) {
-      return reject('empty user ' + user);
+      return reject('Invalid or empty ' + user);
     }
     if (!isValid(text)) {
-      return reject('empty text ' + text);
+      return reject('Invalid or empty text ' + text);
     }
     if (!isValid(sessionId)) {
-      return reject('invalid session' + sessionId);
+      return reject('Invalid session' + sessionId);
     }
 
     var message = new Chat({user: user, text: text, session: sessionId});

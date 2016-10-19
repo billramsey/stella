@@ -10,7 +10,7 @@ angular.module('app.data', [])
       if (chats && chats.data && Array.isArray(chats.data) && chats.data.length > 0) {
         lastGoodDataDate = chats.data[chats.data.length - 1].createdOn;
       }
-      return chats.data || [];
+      return chats.data;
     });
   };
   var post = function(message) {

@@ -4,14 +4,12 @@ angular.module('app.users', [])
     var user;
 
     var logIn = function(userName) {
-      console.log('username', userName);
       return $http({
         method: 'POST',
         url: '/api/login',
         data: {username: userName, password: 'password'}
       })
       .then(function(sessionInfo) {
-        console.log('logging in', sessionInfo);
         if (sessionInfo && sessionInfo.data) {
           user = {username: userName, session: sessionInfo.data.id};
           $sessionStorage.user = user;
@@ -28,7 +26,6 @@ angular.module('app.users', [])
         url: '/api/logout',
       })
       .then(function() {
-        console.log('loggin out');
         clearSession();
       });
     };

@@ -5,65 +5,45 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
-    <!--
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    -->
     <link rel="stylesheet" href="chat.css">
   </head>
   <body ng-controller="AppController">
-  <div class="modal show" ng-show="!loggedIn()">
-    <div class="modal-dialog" role="document">
-      <div class="modal-header">
-        <h3>Pick a user name</h3>
-      </div>
-      <div class="modal-body">
-        <input type="text" class="form-control" ng-model="requesteduser">
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-success" ng-click="logIn(requesteduser)">Go</button>
-      </div>
-    </div>
-  </div>
-  <div class="container" ng-show="loggedIn()">
+  <div class="container">
     <div class="jumbotron chatclient">
       <nav class="navbar navbar-default chatnavbar">
-      <div class="navbar-header">
+      <div class="navbar-header pull-left">
         <a class="navbar-brand" href="#">Chat</a>
       </div>
-
-      <ul class="nav navbar-nav navbar-right">
-      <li class="navbar-text">{{currentUser().username}}</li>
-      <li class="navbar-text">
-        <img src="https://api.adorable.io/avatars/10/{{currentUser().session}}">
-      </li>
-      <li ng-click="logOut()"><a href="#" class="navbar-link">logout</a></li>
-      </ul>
+      <div class="navbar-header pull-right" ng-show="loggedIn()" ng-cloak>
+        <p class="navbar-text">{{currentUser().username}} <a href="#" class="navbar-link" id="logout" ng-click="logOut()">(logout)</a>
+          <img alt="" src="https://api.adorable.io/avatars/10/{{currentUser().session}}">
+        </p>
+      </div>
       </nav>
       <div class="messages" id="messages">
-        <div ng-repeat="chat in chats">
+        <div ng-repeat="chat in chats" ng-cloak>
           <div class="row">
             <div ng-if="chat.session === currentUser().session">
               <div class="col-md-1">
-                <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
+                <img alt="" src="https://api.adorable.io/avatars/10/{{chat.session}}">
               </div>
               <div class="col-md-1">
                 {{chat.user}}
               </div>
-              <div class="col-md-8">
+              <div class="col-md-9">
                 <div class="alert alert-success chattext">
                 {{chat.text}}
                 </div>
               </div>
             </div>
             <div ng-if="chat.session !== currentUser().session">
-              <div class="col-md-1 col-md-push-9">
+              <div class="col-md-1 col-md-push-10">
                 <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
               </div>
-              <div class="col-md-1 col-md-push-7">
+              <div class="col-md-1 col-md-push-8">
                 {{chat.user}}
               </div>
-              <div class="col-md-8 col-md-pull-2">
+              <div class="col-md-9 col-md-pull-2">
                 <div class="alert alert-info chattext">
                 {{chat.text}}
                 </div>
@@ -72,12 +52,21 @@
           </div>
         </div>
       </div>
+      <div ng-if="error !== ''" class="alert alert-danger" ng-cloak>
+        <strong>Error</strong> {{error}}
+      </div>
       <nav class="navbar navbar-default chatnavbar chatnavbarbottom">
-        <form class="navbar-form">
-        <div class="form-group chatfooter">
-          <input type="text" class="form-control" ng-model="message" placeholder="Type Here...">
-        </div>
-        <button type="submit" class="btn btn-success" ng-click="postChat()">Post</button>
+        <form class="navbar-form" ng-show="loggedIn()" ng-cloak>
+          <div class="form-group chatfooter">
+            <input type="text" class="form-control" ng-model="message" placeholder="Type Here...">
+          </div>
+          <button type="submit" class="btn btn-success" ng-click="postChat()">Post</button>
+        </form>
+        <form class="navbar-form" ng-show="!loggedIn()">  
+          <div class="form-group chatfooter">
+            <input type="text" class="form-control" ng-model="requesteduser" placeholder="Pick a user name to participate">
+          </div>
+          <button type="submit" class="btn btn-success" ng-click="logIn(requesteduser)">Login</button>
         </form>
       </nav>
     </div>
@@ -88,6 +77,6 @@
   <script src = "app/app.js"></script>
   <script src = "app/user-services.js"></script>
   <script src = "app/data-services.js"></script>
-  
+
   </body>
 </html>
