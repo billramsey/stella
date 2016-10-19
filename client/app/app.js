@@ -44,7 +44,6 @@ angular.module('app', ['ngStorage'])
   };
   $scope.getUser = User.getUser;
   $scope.setUser = function() {
-    console.log($scope.requesteduser);
     User.setUser($scope.requesteduser)
     .then(getChats);
   };
@@ -126,8 +125,10 @@ angular.module('app', ['ngStorage'])
     });
   };
   var getUser = function() {
-    console.log('user', $sessionStorage.userName);
-    return $sessionStorage.userName;
+    return {
+      username: $sessionStorage.userName,
+      session: $sessionStorage.sessionId
+    };
   };
   return {
     setUser: setUser,

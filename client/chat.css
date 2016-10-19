@@ -21,3 +21,6 @@
   height: 400px;
   overflow-y: scroll;
 }
+.chattext {
+  word-wrap: break-word;
+}

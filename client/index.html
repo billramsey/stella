@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="chat.css">
   </head>
   <body ng-controller="AppController">
-  <div class="modal show" ng-show="getUser() === undefined">
+  <div class="modal show" ng-show="getUser().username === undefined">
     <div class="modal-dialog" role="document">
       <div class="modal-header">
         <h3>Pick a user name</h3>
@@ -25,7 +25,7 @@
       </div>
     </div>
   </div>
-  <div class="container" ng-show="getUser() !== undefined">
+  <div class="container" ng-show="getUser().username !== undefined">
     <div class="jumbotron chatclient">
       <nav class="navbar navbar-default chatnavbar">
       <div class="navbar-header">
@@ -33,14 +33,43 @@
       </div>
 
       <ul class="nav navbar-nav navbar-right">
-      <li class="navbar-text">{{getUser()}}</li>
+      <li class="navbar-text">{{getUser().username}}</li>
+      <li class="navbar-text">
+        <img src="https://api.adorable.io/avatars/10/{{getUser().session}}">
+      </li>
       <li ng-click="logOut()"><a href="#" class="navbar-link">logout</a></li>
       </ul>
       </nav>
       <div class="messages" id="messages">
         <div ng-repeat="chat in chats">
-          {{chat.user}}
-          {{chat.text}}
+          <div class="row">
+            <div ng-if="chat.session === getUser().session">
+              <div class="col-md-1">
+                <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
+              </div>
+              <div class="col-md-1">
+                {{chat.user}}
+              </div>
+              <div class="col-md-8">
+                <div class="alert alert-success chattext">
+                {{chat.text}}
+                </div>
+              </div>
+            </div>
+            <div ng-if="chat.session !== getUser().session">
+              <div class="col-md-1 col-md-push-9">
+                <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
+              </div>
+              <div class="col-md-1 col-md-push-7">
+                {{chat.user}}
+              </div>
+              <div class="col-md-8 col-md-pull-2">
+                <div class="alert alert-info chattext">
+                {{chat.text}}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <nav class="navbar navbar-default chatnavbar chatnavbarbottom">
