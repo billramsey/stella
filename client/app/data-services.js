@@ -4,8 +4,8 @@ angular.module('app.data', [])
   var lookingUp = false;
   var get = function() {
     return new Promise(function(resolve, reject) {
-      console.log('run');
       if (!lookingUp) {
+        console.log('run');
         lookingUp = true;
         $http({
           method: 'GET',
