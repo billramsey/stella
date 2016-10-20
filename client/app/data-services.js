@@ -5,19 +5,26 @@ angular.module('app.data', [])
   var get = function() {
     return new Promise(function(resolve, reject) {
       console.log('run');
-      $http({
-        method: 'GET',
-        url: '/api/chats/' + lastGoodDataDate
-      })
-      .then(function(chats) {
-        console.log('finish');
-        if (chats && chats.data && Array.isArray(chats.data) && chats.data.length > 0) {
-          lastGoodDataDate = chats.data[chats.data.length - 1].createdOn;
-        }
-        resolve(chats.data);
-      }).catch(function(err) {
-        reject(err);
-      }); 
+      if (!lookingUp) {
+        lookingUp = true;
+        $http({
+          method: 'GET',
+          url: '/api/chats/' + lastGoodDataDate
+        })
+        .then(function(chats) {
+          console.log('finish');
+          if (chats && chats.data && Array.isArray(chats.data) && chats.data.length > 0) {
+            lastGoodDataDate = chats.data[chats.data.length - 1].createdOn;
+          }
+          lookingUp = false;
+          resolve(chats.data);
+        }).catch(function(err) {
+          lookingUp = false;
+          reject(err);
+        });
+      } else {
+        promise.resolve([]);
+      }
     });
   };
   var public = function() {
