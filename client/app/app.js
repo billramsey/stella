@@ -51,7 +51,7 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
   $scope.logOut = function() {
     User.logOut()
     .then(function() {
-      console.log($timeout.cancel(timer));
+      $timeout.cancel(timer);
       $scope.error = '';
     })
     .catch(function(err) {
