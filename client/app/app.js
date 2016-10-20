@@ -73,6 +73,7 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
         var messages = document.getElementById('messages');
         messages.scrollTop = messages.scrollHeight;
       }, 0, false);
+      $scope.error = '';
     }
   };
 
@@ -93,7 +94,7 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
   var poll = function() {
     if (User.loggedIn()) {
       getChats();
-      timer = $timeout(poll, 1000);
+      timer = $timeout(poll, 2000);
     }
   };
   var initializeChat = function() {

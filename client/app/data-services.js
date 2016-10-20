@@ -2,17 +2,16 @@ angular.module('app.data', [])
 .service('Data', function($http) {
   var lastGoodDataDate = null;
   var lookingUp = false;
+  //Had to add this little blocking check here because two promises can be scheduled before the first completes
   var get = function() {
     return new Promise(function(resolve, reject) {
       if (!lookingUp) {
-        console.log('run');
         lookingUp = true;
         $http({
           method: 'GET',
           url: '/api/chats/' + lastGoodDataDate
         })
         .then(function(chats) {
-          console.log('finish');
           if (chats && chats.data && Array.isArray(chats.data) && chats.data.length > 0) {
             lastGoodDataDate = chats.data[chats.data.length - 1].createdOn;
           }
@@ -23,7 +22,6 @@ angular.module('app.data', [])
           reject(err);
         });
       } else {
-        console.log('blocking');
         promise.resolve([]);
       }
     });
