@@ -33,14 +33,13 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
         $scope.error = '';
         $scope.message = '';
       }
-
       getChats();
     });
   };
   $scope.loggedIn = User.loggedIn;
   $scope.logIn = function(requesteduser) {
     User.logIn(requesteduser)
-    .then(initializeChat)
+    .then(poll)
     .then(function() {
       $scope.error = '';
     })
@@ -61,22 +60,32 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
     //todo handle error
   };
   $scope.currentUser = User.getUser;
+
+  var storeChats = function(chats) {
+    if (chats && chats.error) {
+      $scope.error = 'Unable to retrieve results: ' + chats.error;
+    } else {
+      chats.forEach(function(chat) {
+        $scope.chats.push(chat);
+      });
+      //Manage scroll to the bottom of the chat window on load.
+      $timeout(function() {
+        var messages = document.getElementById('messages');
+        messages.scrollTop = messages.scrollHeight;
+      }, 0, false);
+    }
+  };
+
   var getChats = function() {
     Data.get()
-    .then(function(chats) {
-      if (chats && chats.error) {
-        $scope.error = 'Unable to retrieve results: ' + chats.error;
-      } else {
-        chats.forEach(function(chat) {
-          $scope.chats.push(chat);
-        });
-        //Manage scroll to the bottom of the chat window on load.
-        $timeout(function() {
-          var messages = document.getElementById('messages');
-          messages.scrollTop = messages.scrollHeight;
-        }, 0, false);
-      }
-    })
+    .then(storeChats)
+    .catch(function(error) {
+      $scope.error = 'Unknown error retrieving messages';
+    });
+  };
+  var getPublicChats = function() {
+    Data.public()
+    .then(storeChats)
     .catch(function(error) {
       $scope.error = 'Unknown error retrieving messages';
     });
@@ -85,11 +94,11 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
   var poll = function() {
     if (User.loggedIn()) {
       getChats();
-      timer = $timeout(poll, 5000);
+      timer = $timeout(poll, 2000);
     }
   };
   var initializeChat = function() {
-    getChats();
+    getPublicChats();
     poll();
   };
 

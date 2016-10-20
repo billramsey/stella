@@ -20,7 +20,8 @@ var authenticated = function(req, res, next) {
   }
   res.sendStatus(401);
 };
-app.get('/api/chats/:lastDate?', messages.getPostsRoute);
+app.get('/api/chats/:lastDate?', authenticated, messages.getPostsRoute);
+app.get('/api/public', messages.getPostsRoute);
 app.post('/api/post', authenticated, messages.addPostRoute);
 
 var port = process.env.PORT || 3000;

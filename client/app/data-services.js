@@ -7,9 +7,19 @@ angular.module('app.data', [])
       url: '/api/chats/' + lastGoodDataDate
     })
     .then(function(chats) {
+      console.log(chats.data);
       if (chats && chats.data && Array.isArray(chats.data) && chats.data.length > 0) {
         lastGoodDataDate = chats.data[chats.data.length - 1].createdOn;
       }
+      return chats.data;
+    });
+  };
+  var public = function() {
+    return $http({
+      method: 'GET',
+      url: '/api/public'
+    })
+    .then(function(chats) {
       return chats.data;
     });
   };
@@ -25,6 +35,7 @@ angular.module('app.data', [])
   };
   return {
     get: get,
-    post: post
+    post: post,
+    public: public
   };
 });
