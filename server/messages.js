@@ -35,7 +35,7 @@ var addPost = function(user, text, sessionId) {
   return new Promise((resolve, reject) => {
 
     if (!isValid(user)) {
-      return reject('Invalid or empty ' + user);
+      return reject('Invalid or empty user' + user);
     }
     if (!isValid(text)) {
       return reject('Invalid or empty text ' + text);

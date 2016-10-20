@@ -1,35 +1,32 @@
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var session = require('express-session');
+var uuid = require('uuid');
 
-//I am using passport and session to generate a unique id for generating
-//a user's avatar.  That way you can have two 'bill's in a chat room and tell
-//them apart.  You can't set your avatar so you can't impersonate someone 
-module.exports = (app, express) => {
-  app.use(session({
-    secret: 'stella',
-    resave: false,
-    saveUninitialized: false
-  }));
-  app.use(passport.initialize());
-  app.use(passport.session());
-  passport.serializeUser(function(user, done) {
-    done(null, user);
-  });
-  passport.deserializeUser(function(id, done) {
-    done(null, id.username);
-  });
-  passport.use(new LocalStrategy(function(username, password, done) {
-    return done(null, {username: username});
-  }));
-  app.post('/api/login', passport.authenticate('local'),
-    function(req, res) {
-      res.json({id: req.sessionID});
-    }
-  );
-  app.post('/api/logout', function(req, res, next) {
-    //logout was unreliable in destroying session.
-    req.session.destroy();
-    res.json({});
-  });
+var uuidHash = {};
+
+var login = function(req, res, next) {
+  var userName = req.body.username;
+  if (userName === undefined || userName === '') {
+    return req.json({error: 'Empty UserName'});
+  }
+  var secret = uuid.v1();
+  //A v1 this close returns a very similar session, which is public.
+  //Go with random.  Collision should be unlikely
+  var sessionId = uuid.v4();
+  uuidHash[secret] = {userName: userName, sessionID: sessionId};
+  res.json({id: sessionId, secret: secret});
+};
+var logout = function(req, res, next) {
+  var userHash = req.headers['secret'];
+  delete uuidHash.userHash;
+  res.json({}); 
+};
+var getUser = function(secret) {
+  if (uuidHash.hasOwnProperty(secret)) {
+    return uuidHash[secret];
+  }
+  return undefined;
+};
+module.exports = {
+  login: login,
+  logout: logout,
+  getUser, getUser
 };

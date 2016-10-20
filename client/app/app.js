@@ -2,8 +2,16 @@
 angular.module('app', ['ngStorage', 'app.users', 'app.data'])
 .config(function($httpProvider) {
   //This allows us to notice when a user was logged out by the server.
-  $httpProvider.interceptors.push(function($q, $injector) {
+  $httpProvider.interceptors.push(function($q, $injector, $sessionStorage) {
     return {
+      'request': function(config) {
+        //
+        if ($sessionStorage && $sessionStorage.user) {
+          //$httpProvider.defaults.headers.common.secret = $sessionStorage.user.secret;
+          config.headers.secret = $sessionStorage.user.secret;
+        }
+        return config;
+      },
       response: function(response) {
         // do something on success
         return response;
