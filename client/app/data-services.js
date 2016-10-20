@@ -23,6 +23,7 @@ angular.module('app.data', [])
           reject(err);
         });
       } else {
+        console.log('blocking');
         promise.resolve([]);
       }
     });
