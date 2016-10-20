@@ -12,7 +12,7 @@ angular.module('app.users', [])
       .then(function(sessionInfo) {
         if (sessionInfo && sessionInfo.data) {
           user = {username: userName, session: sessionInfo.data.id, secret: sessionInfo.data.secret};
-          console.log('user', user);
+          //console.log('user', user);
           $sessionStorage.user = user;
         }
       });
