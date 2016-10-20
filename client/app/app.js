@@ -90,7 +90,6 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
       $scope.error = 'Unknown error retrieving messages';
     });
   };
-
   var poll = function() {
     if (User.loggedIn()) {
       getChats();
