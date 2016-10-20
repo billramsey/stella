@@ -77,14 +77,14 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
   };
 
   var getChats = function() {
-    Data.get()
+    return Data.get()
     .then(storeChats)
     .catch(function(error) {
       $scope.error = 'Unknown error retrieving messages';
     });
   };
   var getPublicChats = function() {
-    Data.public()
+    return Data.public()
     .then(storeChats)
     .catch(function(error) {
       $scope.error = 'Unknown error retrieving messages';
@@ -97,8 +97,8 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
     }
   };
   var initializeChat = function() {
-    getPublicChats();
-    poll();
+    getPublicChats()
+    .then(poll);
   };
 
   initializeChat();
