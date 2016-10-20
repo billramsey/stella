@@ -93,7 +93,7 @@ angular.module('app', ['ngStorage', 'app.users', 'app.data'])
   var poll = function() {
     if (User.loggedIn()) {
       getChats();
-      timer = $timeout(poll, 2000);
+      timer = $timeout(poll, 1000);
     }
   };
   var initializeChat = function() {
