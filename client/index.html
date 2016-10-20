@@ -21,31 +21,31 @@
       </div>
       </nav>
       <div class="messages" id="messages">
-        <div ng-repeat="chat in chats" ng-cloak>
+        <div ng-repeat="chat in chats track by $index" ng-cloak>
           <div class="row">
-            <div ng-if="chat.session === currentUser().session">
+            <div ng-if="::chat.session === currentUser().session">
               <div class="col-md-1">
-                <img alt="" src="https://api.adorable.io/avatars/10/{{chat.session}}">
+                <img alt="" src="https://api.adorable.io/avatars/10/{{::chat.session}}">
               </div>
               <div class="col-md-1">
-                {{chat.user}}
+                {{::chat.user}}
               </div>
               <div class="col-md-9">
                 <div class="alert alert-success chattext">
-                {{chat.text}}
+                {{::chat.text}}
                 </div>
               </div>
             </div>
-            <div ng-if="chat.session !== currentUser().session">
+            <div ng-if="::chat.session !== currentUser().session">
               <div class="col-md-1 col-md-push-10">
-                <img src="https://api.adorable.io/avatars/10/{{chat.session}}">
+                <img src="https://api.adorable.io/avatars/10/{{::chat.session}}">
               </div>
               <div class="col-md-1 col-md-push-8">
-                {{chat.user}}
+                {{::chat.user}}
               </div>
               <div class="col-md-9 col-md-pull-2">
                 <div class="alert alert-info chattext">
-                {{chat.text}}
+                {{::chat.text}}
                 </div>
               </div>
             </div>

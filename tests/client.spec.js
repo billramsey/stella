@@ -17,7 +17,7 @@ describe('Testing of chat client', function() {
   it('App to store last entries', function() {
     var $scope = {};
     var appController = $controller('AppController', {$scope: $scope});
-
+    //Implement more tests!
     expect(true).toBe(true);
   });
 });

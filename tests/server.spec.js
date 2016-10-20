@@ -23,7 +23,6 @@ describe('Chat Timing', function() {
       messages.getPosts()
       .then((r) => {
         lastDate = r[r.length - 1].createdOn;
-        console.log('last date', lastDate);
         expect(lastDate).to.not.be.null;
       })
       .then(() => messages.addPost('bill', 'new post', 'session'))
